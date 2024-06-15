@@ -41,7 +41,7 @@ class ProductController extends Controller
                     'price' => $product->price,
                     'quantity' => $product->quantity,
                     'edit_url' => route('products.edit', $product->id),
-                    'delete_url' => route('products.destroy', $product->id),
+
                 ];
             }
 
@@ -97,8 +97,12 @@ class ProductController extends Controller
 
         if ($user->role == "admin") {
             $product = Product::find($id);
-            $product->delete();
-            return redirect()->route('products.index');
+            if ($product) {
+                $product->delete();
+                return response()->json(['message' => 'Product deleted successfully.']);
+            } else {
+                return response()->json(['error' => 'Product not found'], 404);
+            }
         }
     }
     public function update(Request $request, $id)

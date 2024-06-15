@@ -1,5 +1,3 @@
-// products/index.blade.php
-
 @extends('layout')
 
 @section('content')
@@ -43,9 +41,9 @@
             html += '<td>';
             if ('{{ $user_role }}' == "admin") {
               html += '<a href="' + products[i].edit_url + '" class="btn btn-primary">Edit</a>';
-              html += '<a href="' + products[i].delete_url + '" class="btn btn-danger">Delete</a>';
+              html += '<button class="btn btn-danger delete-product" data-product-id="' + products[i].id + '">Delete</button>';
             } else {
-              html += '<button class="btn btn-primary add-to-cart" id="myButton" data-product-id="' + products[i].id + '">Add to Cart</button>';
+              html += '<button class="btn btn-primary add-to-cart" data-product-id="' + products[i].id + '">Add to Cart</button>';
             }
             html += '</td>';
             html += '</tr>';
@@ -73,6 +71,25 @@
           alert(response.message);
           fetchProducts();
           // Optionally, update the cart UI
+        },
+        error: function(response) {
+          alert('Error: ' + response.responseJSON.error);
+        }
+      });
+    });
+
+    $(document).on('click', '.delete-product', function() {
+      var productId = $(this).data('product-id');
+
+      $.ajax({
+        url: '{{ route("products.destroy", ":id") }}'.replace(':id', productId),
+        method: 'DELETE',
+        data: {
+          _token: '{{ csrf_token() }}' // Add the CSRF token here
+        },
+        success: function(response) {
+
+          fetchProducts();
         },
         error: function(response) {
           alert('Error: ' + response.responseJSON.error);
