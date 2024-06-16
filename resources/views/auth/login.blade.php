@@ -82,7 +82,7 @@
       <input type="password" placeholder="Enter Password" name="password" />
       <button type="submit">Login</button>
     </form>
-    <p>Forgot password?</p>
+
   </div>
 </body>
 
